@@ -1,14 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/03/06 17:32:18 by adubedat          #+#    #+#             */
+/*   Updated: 2018/03/06 19:11:27 by adubedat         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <iostream>
 #include <fstream>
+#include "InputSource.hpp"
 
-int main(int argc, char **argv)
+void	test(InputSource &src) {
+
+	std::cout << src.get_next_line() << std::endl;
+}
+
+int 	main(int argc, char **argv)
 {
-	std::ifstream ifs;
-
+	(void)argv;
 	if (argc > 1)
 	{
-		for (int i = 1; i < argc; ++i)
-			std::cout << argv[i] << std::endl;
+		for (int i = 1; i < argc; ++i) {
+			StandardInputSource lol;
+			test(lol);
+		}
 	}
 	else
 		std::cout << "read stdin" << std::endl;

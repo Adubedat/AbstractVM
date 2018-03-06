@@ -6,7 +6,7 @@
 #    By: adubedat <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/04/23 17:07:31 by adubedat          #+#    #+#              #
-#    Updated: 2018/03/03 18:22:00 by adubedat         ###   ########.fr        #
+#    Updated: 2018/03/06 17:32:10 by adubedat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ CPPFLAGS = $(addprefix -I ,$(INC_PATH))
 LDFLAGS =
 LDLIBS =
 
-SRC_NAME = main.cpp
+SRC_NAME =	main.cpp \
+			InputSource.cpp
 
 OBJ_NAME = $(SRC_NAME:.cpp=.o)
 
