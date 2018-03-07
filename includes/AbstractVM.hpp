@@ -1,33 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Lexer.cpp                                          :+:      :+:    :+:   */
+/*   AbstractVM.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/06 14:45:14 by adubedat          #+#    #+#             */
-/*   Updated: 2018/03/07 18:25:13 by adubedat         ###   ########.fr       */
+/*   Created: 2018/03/07 17:02:51 by adubedat          #+#    #+#             */
+/*   Updated: 2018/03/07 17:55:10 by adubedat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Lexer.hpp"
+#ifndef ABSTRACT_VM_HPP
+# define ABSTRACT_VM_HPP
 
-Lexer::Lexer(void) {}
+# include "InputSource.hpp"
+# include "Parser.hpp"
 
-Lexer::Lexer(Lexer const & src) {
+class AbstractVM
+{
+public:
 
-	*this = src;
-}
+	AbstractVM(void)
+	AbstractVM(InputSource const & src);
+	virtual ~AbstractVM ();
 
-Lexer::Lexer(InputSource const & src){
+private:
 
-}
+	std::vector<t_instruction> _instruction_list;
+};
 
-Lexer		&Lexer::operator=(Lexer const & rhs) {
-
-	if (this != rhs) {
-		_token_list = rhs._token_list;
-	}
-}
-
-Lexer::~Lexer(void) {}
+#endif

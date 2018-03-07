@@ -6,7 +6,7 @@
 /*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/06 16:31:08 by adubedat          #+#    #+#             */
-/*   Updated: 2018/03/06 19:14:52 by adubedat         ###   ########.fr       */
+/*   Updated: 2018/03/07 19:31:06 by adubedat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,94 @@
 
 InputSource::InputSource(void) : _line_nbr(0) {}
 
-InputSource::InputSource(InputSource const & src) {
-
-	*this = src;
-}
-
 InputSource::~InputSource(void) {}
-
-InputSource		&InputSource::operator=(InputSource const & rhs) {
-
-	if (this != &rhs) {
-		_line_nbr = rhs._line_nbr;
-	}
-	return *this;
-}
 
 unsigned int	InputSource::get_line_nbr(void) const {
 
 	return (_line_nbr);
 }
 
+/*
+ *		File Input Class
+*/
+
 FileInputSource::FileInputSource(void) {}
 
-FileInputSource::~FileInputSource(void) {}
+FileInputSource::FileInputSource(FileInputSource const & src) {
 
-std::string				FileInputSource::get_next_line(void) {
-
-	return ("file");
+	*this = src;
 }
 
-StandardInputSource::StandardInputSource(void) {}
+FileInputSource::FileInputSource(std::string file_name) {
+
+	try {
+		_ifs = new std::ifstream(file_name, std::ifstream::in);
+	} catch (std::exception const & e) {
+		std::cerr << e.what() << std::endl;
+	}
+}
+
+FileInputSource::~FileInputSource(void) {
+
+	try {
+		delete _ifs;
+	} catch (std::exception const & e) {
+		std::cerr << e.what() << std::endl;
+	}
+}
+
+std::ifstream	*FileInputSource::get_ifs(void) const{
+
+	return (_ifs);
+}
+
+FileInputSource	&FileInputSource::operator=(FileInputSource const & rhs) {
+
+	if (this != &rhs) {
+
+		_line_nbr = rhs._line_nbr;
+		_ifs = rhs.get_ifs();
+	}
+	return (*this);
+}
+
+int				FileInputSource::get_next_line(std::string *line) {
+
+	if (getline(*_ifs, *line)) {
+		_line_nbr += 1;
+		return (1);
+	}
+	return (0);
+}
+
+/*
+ *		Standard Input Class
+*/
+
+StandardInputSource::StandardInputSource(void) : _eof(0) {}
+
+StandardInputSource::StandardInputSource(StandardInputSource const & src) {
+
+	*this = src;
+}
 
 StandardInputSource::~StandardInputSource(void) {}
 
-std::string				StandardInputSource::get_next_line(void) {
+StandardInputSource		&StandardInputSource::operator=(StandardInputSource const & rhs) {
 
-	return ("standard");
+	if (this != &rhs) {
+		_line_nbr = rhs._line_nbr;
+		_eof = rhs._eof;
+	}
+	return (*this);
+}
+
+int				StandardInputSource::get_next_line(std::string *line) {
+
+	if (_eof)
+		return (0);
+	getline(std::cin, *line);
+	if ((*line).find(";;") != std::string::npos)
+		_eof = 1;
+	return (1);
 }

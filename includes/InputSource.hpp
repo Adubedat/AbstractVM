@@ -6,7 +6,7 @@
 /*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/06 16:31:10 by adubedat          #+#    #+#             */
-/*   Updated: 2018/03/06 19:14:54 by adubedat         ###   ########.fr       */
+/*   Updated: 2018/03/07 19:32:11 by adubedat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@ public:
 	InputSource(InputSource const & src);
 	virtual ~InputSource(void);
 
-	InputSource				&operator=(InputSource const & rhs);
 	unsigned int			get_line_nbr(void) const;
-	virtual	std::string		get_next_line(void) = 0;
-
-private:
+	virtual	int				get_next_line(std::string *line) = 0;
+	
+protected:
 
 	unsigned int	_line_nbr;
 };
@@ -38,13 +37,17 @@ class	FileInputSource : public InputSource
 public:
 
 	FileInputSource(void);
+	FileInputSource(FileInputSource const & src);
+	FileInputSource(std::string file_name);
 	virtual ~FileInputSource(void);
-	
-	virtual	std::string		get_next_line(void);
+
+	std::ifstream				*get_ifs(void) const;
+	virtual FileInputSource		&operator=(FileInputSource const & rhs);
+	virtual	int					get_next_line(std::string *line);
 
 private:
 
-	std::ifstream	_ifs;
+	std::ifstream	*_ifs;
 };
 
 class	StandardInputSource : public InputSource
@@ -52,9 +55,15 @@ class	StandardInputSource : public InputSource
 public:
 
 	StandardInputSource(void);
+	StandardInputSource(StandardInputSource const & src);
 	virtual	~StandardInputSource(void);
 
-	virtual std::string	get_next_line(void);
+	virtual StandardInputSource		&operator=(StandardInputSource const & rhs);
+	virtual int						get_next_line(std::string *line);
+
+private:
+
+	int				_eof;
 };
 
 #endif

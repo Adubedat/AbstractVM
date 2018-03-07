@@ -6,7 +6,7 @@
 /*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/06 17:32:18 by adubedat          #+#    #+#             */
-/*   Updated: 2018/03/06 19:11:27 by adubedat         ###   ########.fr       */
+/*   Updated: 2018/03/07 19:22:01 by adubedat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@
 
 void	test(InputSource &src) {
 
-	std::cout << src.get_next_line() << std::endl;
+	std::string test;
+
+	while (src.get_next_line(&test))
+		std::cout << test << std::endl;
 }
 
 int 	main(int argc, char **argv)
@@ -25,8 +28,8 @@ int 	main(int argc, char **argv)
 	if (argc > 1)
 	{
 		for (int i = 1; i < argc; ++i) {
-			StandardInputSource lol;
-			test(lol);
+			FileInputSource source(argv[i]);
+			test(source);
 		}
 	}
 	else
@@ -48,4 +51,9 @@ int 	main(int argc, char **argv)
  * Faire une classe Execution qui distribue les token instr via pointeur sur fonction
  *
  * Faire une classe Operand appelee par instruction qui cree les valeurs sur la stack et fait les operations
+ *
+ * Lexer to Parser -> token list
+ * Parser to VM -> instruction list
+ *
+ * struct intruction {Instruction, IOperand}
 */

@@ -1,33 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Lexer.cpp                                          :+:      :+:    :+:   */
+/*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/06 14:45:14 by adubedat          #+#    #+#             */
-/*   Updated: 2018/03/07 18:25:13 by adubedat         ###   ########.fr       */
+/*   Created: 2018/03/07 17:58:09 by adubedat          #+#    #+#             */
+/*   Updated: 2018/03/07 18:12:52 by adubedat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Lexer.hpp"
+#include "Parser.hpp"
 
-Lexer::Lexer(void) {}
+Parser::Parser(void) {};
 
-Lexer::Lexer(Lexer const & src) {
+Parser::Parser(InputSource const & src) {
 
-	*this = src;
+	Lexer	lexer(src);
+	_token_list = lexer.get_token_list;
+	
 }
 
-Lexer::Lexer(InputSource const & src){
-
-}
-
-Lexer		&Lexer::operator=(Lexer const & rhs) {
-
-	if (this != rhs) {
-		_token_list = rhs._token_list;
-	}
-}
-
-Lexer::~Lexer(void) {}
+Parser::~Parser(void) {};

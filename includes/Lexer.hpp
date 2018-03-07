@@ -6,14 +6,16 @@
 /*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/06 14:45:56 by adubedat          #+#    #+#             */
-/*   Updated: 2018/03/06 16:18:13 by adubedat         ###   ########.fr       */
+/*   Updated: 2018/03/07 18:26:19 by adubedat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_HPP
 # define LEXER_HPP
 
-enum 				TokenType {
+# include "InputSource.hpp"
+
+enum 				e_tokenType {
 
 					Instruction,
 					Int8,
@@ -38,9 +40,8 @@ public:
 	Lexer(Lexer const &src);
 	virtual ~Lexer(void);
 
-private:
-
-	std::deque<TokenType>	token;
+	Lexer					&operator=(Lexer const & rhs);
+	std::vector<t_token>	get_next_tokens(void);
 
 }
 
