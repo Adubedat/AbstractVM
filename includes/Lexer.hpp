@@ -6,7 +6,7 @@
 /*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/06 14:45:56 by adubedat          #+#    #+#             */
-/*   Updated: 2018/03/07 18:26:19 by adubedat         ###   ########.fr       */
+/*   Updated: 2018/03/07 21:05:32 by adubedat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,11 @@ public:
 	Lexer(Lexer const &src);
 	virtual ~Lexer(void);
 
-	Lexer					&operator=(Lexer const & rhs);
 	std::vector<t_token>	get_next_tokens(void);
 
+private:
+
+	InputSource	*_src;
 }
 
 #endif
