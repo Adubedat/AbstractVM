@@ -14,6 +14,11 @@
 
 Lexer::Lexer(void) {}
 
+Lexer::Lexer(InputSource const & src) {
+
+	_src = &src;
+}
+
 Lexer::Lexer(Lexer const & src) {
 
 	*this = src;

@@ -36,8 +36,9 @@ FileInputSource::FileInputSource(std::string file_name) {
 
 	try {
 		_ifs = new std::ifstream(file_name, std::ifstream::in);
-	} catch (std::exception const & e) {
-		std::cerr << e.what() << std::endl;
+		_ifs->exceptions(std::ifstream::failbit);
+	} catch (const std::ios_base::failure & e) {
+		std::cerr << "Error when opening file : " << e.what() << std::endl;
 	}
 }
 
@@ -45,8 +46,8 @@ FileInputSource::~FileInputSource(void) {
 
 	try {
 		delete _ifs;
-	} catch (std::exception const & e) {
-		std::cerr << e.what() << std::endl;
+	} catch (const std::ios_base::failure & e) {
+		std::cerr << "Error when closing file stream : " << e.what() << std::endl;
 	}
 }
 

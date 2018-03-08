@@ -17,7 +17,11 @@ Parser::Parser(void) {};
 Parser::Parser(InputSource const & src) {
 
 	Lexer	lexer(src);
-	_token_list = lexer.get_token_list;
+	vector<t_token>	tokens;
+
+	while (lexer.get_next_tokens(*tokens)) {
+		std::cout << "token line received." << std::endl;
+	}
 	
 }
 

@@ -43,12 +43,13 @@ struct	s_instruction {
 class Parser
 {
 public:
-	Parser(arguments);
+	Parser(void);
 	Parser(InputSource const & src);
-	virtual ~Parser ();
+	virtual ~Parser();
 
 private:
 	
-	std::vector<t_instruciton>	_instruction_list;
-	std::vector<t_token>		_token_list
+	std::vector<t_instruction>	_instruction_list;
 };
+
+#endif

@@ -37,10 +37,11 @@ class Lexer
 public:
 
 	Lexer(void);
+	Lexer(InputSource const & src);
 	Lexer(Lexer const &src);
 	virtual ~Lexer(void);
 
-	std::vector<t_token>	get_next_tokens(void);
+	int	get_next_tokens(vector<t_token> *tokens);
 
 private:
 
