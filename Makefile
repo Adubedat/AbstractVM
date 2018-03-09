@@ -24,13 +24,16 @@ DST_PATH = $(ROOT)
 LFT_PATH = 
 
 CC = clang++ -g
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = #-Wall -Wextra -Werror
 CPPFLAGS = $(addprefix -I ,$(INC_PATH))
 LDFLAGS =
 LDLIBS =
 
 SRC_NAME =	main.cpp \
-			InputSource.cpp
+			InputSource.cpp \
+			AbstractVM.cpp \
+			Lexer.cpp \
+			Parser.cpp
 
 OBJ_NAME = $(SRC_NAME:.cpp=.o)
 

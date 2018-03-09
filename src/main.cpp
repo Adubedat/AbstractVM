@@ -13,14 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include "InputSource.hpp"
-
-void	test(InputSource &src) {
-
-	std::string test;
-
-	while (src.get_next_line(&test))
-		std::cout << test << std::endl;
-}
+#include "AbstractVM.hpp"
 
 int 	main(int argc, char **argv)
 {
@@ -29,7 +22,7 @@ int 	main(int argc, char **argv)
 	{
 		for (int i = 1; i < argc; ++i) {
 			FileInputSource source(argv[i]);
-			test(source);
+			AbstractVM vm(source);
 		}
 	}
 	else

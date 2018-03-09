@@ -20,13 +20,13 @@ class AbstractVM
 {
 public:
 
-	AbstractVM(void)
-	AbstractVM(InputSource const & src);
+	AbstractVM(void);
+	AbstractVM(InputSource & src);
 	virtual ~AbstractVM ();
 
 private:
 
-	std::vector<t_instruction> _instruction_list;
+	std::vector<s_instruction> _instruction_list;
 };
 
 #endif

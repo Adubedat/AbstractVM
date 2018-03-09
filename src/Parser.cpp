@@ -14,15 +14,21 @@
 
 Parser::Parser(void) {};
 
-Parser::Parser(InputSource const & src) {
+Parser::Parser(InputSource & src) {
 
 	Lexer	lexer(src);
-	vector<t_token>	tokens;
+	std::vector<t_token>	tokens;
 
-	while (lexer.get_next_tokens(*tokens)) {
-		std::cout << "token line received." << std::endl;
+	while (lexer.get_next_tokens(&tokens)) {
+		if (tokens.size() > 0)
+			std::cout << tokens[0].value << std::endl;
 	}
 	
 }
 
 Parser::~Parser(void) {};
+
+std::vector<t_instruction>		Parser::get_instruction_list(void) {
+
+	return (_instruction_list);
+}

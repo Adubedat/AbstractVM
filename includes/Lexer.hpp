@@ -14,6 +14,11 @@
 # define LEXER_HPP
 
 # include "InputSource.hpp"
+# include <vector>
+# include <exception>
+# include <stdexcept>
+# include <sstream>
+# include <regex>
 
 enum 				e_tokenType {
 
@@ -23,12 +28,11 @@ enum 				e_tokenType {
 					Int32,
 					Float,
 					Double,
-					Separator
 };
 
-struct				s_token {
+typedef struct		s_token {
 
-	TokenType		token;
+	e_tokenType		token_type;
 	std::string		value;
 }					t_token;
 
@@ -37,15 +41,32 @@ class Lexer
 public:
 
 	Lexer(void);
-	Lexer(InputSource const & src);
+	Lexer(InputSource & src);
 	Lexer(Lexer const &src);
 	virtual ~Lexer(void);
 
-	int	get_next_tokens(vector<t_token> *tokens);
+	Lexer	&operator=(Lexer const & src);
+	int		get_next_tokens(std::vector<t_token> *tokens);
+
+	class	SyntaxException : public std::exception
+	{
+	public:
+		SyntaxException(unsigned int const line_nbr, unsigned int const column_nbr);
+		virtual const char* what(void) const throw();
+	private:
+		unsigned int	_line_nbr;
+		unsigned int	_column_nbr;
+	};
 
 private:
 
 	InputSource	*_src;
-}
+
+	std::vector<t_token>	str_to_token(std::string line);
+	t_token					get_instruction(std::string	instruction, size_t column_nbr);
+	e_tokenType				get_operand(std::string	operand, size_t column_nbr);
+	std::string				get_operand_value(e_tokenType type, std::string value,
+			size_t column_nbr);
+};
 
 #endif

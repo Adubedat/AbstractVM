@@ -14,10 +14,10 @@
 
 AbstractVM::AbstractVM(void) {}
 
-AbstractVM::AbstractVM(InputSource const & src){
+AbstractVM::AbstractVM(InputSource & src){
 
 	Parser	parser(src);
-	_instruction_list = parser.get_instruction_list;
+	_instruction_list = parser.get_instruction_list();
 }
 
 AbstractVM::~AbstractVM(void) {}

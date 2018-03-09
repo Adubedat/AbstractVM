@@ -22,30 +22,32 @@
 
 enum 	e_instruction {
 	
-	push,
-	pop,
-	dump,
-	assert,
-	add,
-	sub,
-	mul,
-	div,
-	mod,
-	print,
-	exit
+	Push,
+	Pop,
+	Dump,
+	Assert,
+	Add,
+	Sub,
+	Mul,
+	Div,
+	Mod,
+	Print,
+	Exit
 };
 
-struct	s_instruction {
+typedef struct		s_instruction {
 
 	e_instruction	instruction;
-}		t_instruction;
+}					t_instruction;
 
 class Parser
 {
 public:
 	Parser(void);
-	Parser(InputSource const & src);
+	Parser(InputSource & src);
 	virtual ~Parser();
+	
+	std::vector<t_instruction>	get_instruction_list(void);	
 
 private:
 	
