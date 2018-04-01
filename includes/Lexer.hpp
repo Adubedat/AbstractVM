@@ -62,11 +62,8 @@ private:
 
 	InputSource	*_src;
 
-	std::vector<t_token>	str_to_token(std::string line);
-	t_token					get_instruction(std::string	instruction, size_t column_nbr);
-	e_tokenType				get_operand(std::string	operand, size_t column_nbr);
-	std::string				get_operand_value(e_tokenType type, std::string value,
-			size_t column_nbr);
+	std::vector<std::string>	split(std::string const &str);
+	std::vector<t_token>		str_to_token(std::string line);
 };
 
 #endif

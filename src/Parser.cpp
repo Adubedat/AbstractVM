@@ -20,8 +20,8 @@ Parser::Parser(InputSource & src) {
 	std::vector<t_token>	tokens;
 
 	while (lexer.get_next_tokens(&tokens)) {
-		if (tokens.size() > 0)
-			std::cout << tokens[0].value << std::endl;
+//		if (tokens.size() > 0)
+//			std::cout << tokens[0].value << std::endl;
 	}
 	
 }
