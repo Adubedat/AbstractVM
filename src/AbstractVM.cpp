@@ -14,7 +14,7 @@
 
 AbstractVM::AbstractVM(void) {}
 
-AbstractVM::AbstractVM(InputSource & src){
+AbstractVM::AbstractVM(InputSource &src){
 
 	Parser	parser(src);
 	_instruction_list = parser.get_instruction_list();

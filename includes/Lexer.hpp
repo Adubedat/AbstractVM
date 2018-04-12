@@ -53,6 +53,7 @@ struct	Token {
 	};
 
 	Token(Token::Type type);
+	Token(Token::Type type, std::string value);
 
 	Type 					type;
 	std::string		value;
@@ -81,14 +82,14 @@ public:
 private:
 
 	Lexer(void);
-	InputSource																		*_src;
-	unsigned int																	_index;
+	InputSource										*_src;
+	std::string::iterator							_it;
 	std::unordered_map<std::string, Token::Type>	_keywords;
-	std::unordered_map<char, Token::Type> 				_reserved_char;
+	std::unordered_map<char, Token::Type> 			_reserved_char;
 
-	std::vector<Token>			line_to_tokens(std::string line);
-	Token 									name();
-	Token										number();
+	std::vector<Token>			line_to_tokens(std::string &line);
+	Token 						name(std::string &line);
+	Token						number(std::string &line);
 
 };
 

@@ -14,9 +14,11 @@
 
 Token::Token(Token::Type type) : type(type), value("") {}
 
+Token::Token(Token::Type type, std::string value) : type(type), value(value) {}
+
 Lexer::Lexer(void) {}
 
-Lexer::Lexer(InputSource &src) : _index(0) {
+Lexer::Lexer(InputSource &src) {
 
 	_src = &src;
 	_keywords["push"] = Token::Type::Push;
@@ -39,7 +41,7 @@ Lexer::Lexer(InputSource &src) : _index(0) {
 	_reserved_char[')'] = Token::Type::ClosedParenthesis;
 }
 
-Lexer::Lexer(Lexer const & src) : _index(0){
+Lexer::Lexer(Lexer const & src){
 
 	*this = src;
 }
@@ -50,7 +52,7 @@ Lexer		&Lexer::operator=(Lexer const & rhs) {
 
 	if (this != &rhs) {
 		_src = rhs._src;
-		_index = rhs._index;
+		_it = rhs._it;
 		_keywords = rhs._keywords;
 	}
 	return (*this);
@@ -61,35 +63,36 @@ int						Lexer::get_next_tokens(std::vector<Token> *tokens) {
 	std::string	line;
 
 	if (_src->get_next_line(line)) {
-			try {
+		try {
 
-				*tokens = line_to_tokens(line);
-			} catch(std::exception &e) {
+			*tokens = line_to_tokens(line);
+		} catch(std::exception &e) {
 
-				std::cout << e.what() << std::endl;
-			}
-			return (1);
+			std::cout << e.what() << std::endl;
 		}
-		return (0);
+		return (1);
+	}
+	return (0);
 }
 
-std::vector<Token>	Lexer::line_to_tokens(std::string line) {
+std::vector<Token>	Lexer::line_to_tokens(std::string &line) {
 
 	std::vector<Token>			token_list;
 
-	while (line[_index]) {
-		if (line[_index] == ';')
+	_it = line.begin();
+	while (_it != line.end()) {
+		if (*_it == ';')
 			return(token_list);
-		else if (isalpha(line[_index]))
-			token_list.push_back(name());
-		else if (isdigit(line[_index]))
-			token_list.push_back(number());
-		else if (line[_index] == ' ' || line[_index] == '\t')
-			_index++;
+		else if (isalpha(*_it))
+			token_list.push_back(name(line));
+		else if (isdigit(*_it))
+			token_list.push_back(number(line));
+		else if (*_it == ' ' || *_it == '\t')
+			_it++;
 		else {
-			auto found = _reserved_char.find(line[_index]);
+			auto found = _reserved_char.find(*_it);
 			if (found != _reserved_char.end()) {
-				_index++;
+				_it++;
 				token_list.push_back(Token(found->second));
 			}
 			else {
@@ -97,19 +100,41 @@ std::vector<Token>	Lexer::line_to_tokens(std::string line) {
 			}
 		}
 	}
-	_index = 0;
 	return (token_list);
 }
 
-Token								Lexer::name() {
+Token								Lexer::name(std::string &line) {
 
-	_index++;
-	return (Token(Token::Type::Push));
+	std::string	str;
+
+	while (isalnum(*_it)) {
+		str += *_it;
+		_it++;
+	}
+	std::cout << str << std::endl;
+	auto found = _keywords.find(str);
+	if (found != _keywords.end())
+		return (Token(found->second));
+	else
+		throw Lexer::SyntaxException("Error line " + std::to_string(_src->get_line_nbr()) + ": Unrecognized token");
 }
 
-Token								Lexer::number() {
-	_index++;
-	return (Token(Token::Type::Push));
+Token								Lexer::number(std::string &line) {
+
+	std::string str;
+	bool		dot_found = false;
+
+	while (isdigit(*_it) || *_it == '.') {
+		if (*_it == '.') {
+			if (dot_found)
+				throw Lexer::SyntaxException("Error line " + std::to_string(_src->get_line_nbr()) + ": Unvalid number passed to operand");
+			dot_found = true;
+		}
+		str += *_it;
+		_it++;
+	}
+	std::cout << str << std::endl;
+	return (Token(Token::Type::Number, str));
 }
 
 Lexer::SyntaxException::SyntaxException(std::string msg) :

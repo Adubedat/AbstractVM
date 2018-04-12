@@ -25,8 +25,10 @@ int 	main(int argc, char **argv)
 			AbstractVM vm(source);
 		}
 	}
-	else
-		std::cout << "read stdin" << std::endl;
+	else {
+		StandardInputSource source;
+		AbstractVM vm(source);
+	}
 	return (EXIT_SUCCESS);
 }
 
