@@ -66,9 +66,9 @@ FileInputSource	&FileInputSource::operator=(FileInputSource const & rhs) {
 	return (*this);
 }
 
-int				FileInputSource::get_next_line(std::string *line) {
+int				FileInputSource::get_next_line(std::string &line) {
 
-	if (getline(*_ifs, *line)) {
+	if (getline(*_ifs, line)) {
 		_line_nbr += 1;
 		return (1);
 	}
@@ -97,12 +97,12 @@ StandardInputSource		&StandardInputSource::operator=(StandardInputSource const &
 	return (*this);
 }
 
-int				StandardInputSource::get_next_line(std::string *line) {
+int				StandardInputSource::get_next_line(std::string &line) {
 
 	if (_eof)
 		return (0);
-	getline(std::cin, *line);
-	if ((*line).find(";;") != std::string::npos)
+	getline(std::cin, line);
+	if ((line).find(";;") != std::string::npos)
 		_eof = 1;
 	return (1);
 }

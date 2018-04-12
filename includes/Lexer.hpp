@@ -15,55 +15,81 @@
 
 # include "InputSource.hpp"
 # include <vector>
-# include <exception>
-# include <stdexcept>
 # include <sstream>
-# include <regex>
+# include <unordered_map>
 
-enum 				e_tokenType {
 
-					Instruction,
-					Int8,
-					Int16,
-					Int32,
-					Float,
-					Double,
-};
+struct	Token {
 
-typedef struct		s_token {
+	enum class	Type {
 
-	e_tokenType		token_type;
+							//Instructions
+
+							Push,
+							Pop,
+							Dump,
+							Assert,
+							Add,
+							Sub,
+							Mul,
+							Div,
+							Mod,
+							Print,
+							Exit,
+
+							//Operands
+							Int8,
+							Int16,
+							Int32,
+							Float,
+							Double,
+
+							//Values
+							Number,
+
+							//Delimiters
+							OpenParenthesis,
+							ClosedParenthesis
+	};
+
+	Token(Token::Type type);
+
+	Type 					type;
 	std::string		value;
-}					t_token;
+};
 
 class Lexer
 {
 public:
 
-	Lexer(void);
 	Lexer(InputSource & src);
 	Lexer(Lexer const &src);
 	virtual ~Lexer(void);
 
 	Lexer	&operator=(Lexer const & src);
-	int		get_next_tokens(std::vector<t_token> *tokens);
+	int		get_next_tokens(std::vector<Token> *tokens);
 
 	class	SyntaxException : public std::exception
 	{
 	public:
-		SyntaxException(unsigned int const line_nbr, unsigned int const column_nbr);
+		SyntaxException(std::string msg);
 		virtual const char* what(void) const throw();
 	private:
-		unsigned int	_line_nbr;
-		unsigned int	_column_nbr;
+		std::string	_msg;
 	};
 
 private:
 
-	InputSource	*_src;
+	Lexer(void);
+	InputSource																		*_src;
+	unsigned int																	_index;
+	std::unordered_map<std::string, Token::Type>	_keywords;
+	std::unordered_map<char, Token::Type> 				_reserved_char;
 
-	std::vector<std::string>	split(std::string const &str);
-	std::vector<t_token>		str_to_token(std::string line);
+	std::vector<Token>			line_to_tokens(std::string line);
+	Token 									name();
+	Token										number();
+
 };
 
 #endif

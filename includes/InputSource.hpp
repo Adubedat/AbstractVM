@@ -25,8 +25,8 @@ public:
 	virtual ~InputSource(void);
 
 	unsigned int			get_line_nbr(void) const;
-	virtual	int				get_next_line(std::string *line) = 0;
-	
+	virtual	int				get_next_line(std::string &line) = 0;
+
 protected:
 
 	unsigned int	_line_nbr;
@@ -43,7 +43,7 @@ public:
 
 	std::ifstream				*get_ifs(void) const;
 	virtual FileInputSource		&operator=(FileInputSource const & rhs);
-	virtual	int					get_next_line(std::string *line);
+	virtual	int					get_next_line(std::string &line);
 
 private:
 
@@ -59,7 +59,7 @@ public:
 	virtual	~StandardInputSource(void);
 
 	virtual StandardInputSource		&operator=(StandardInputSource const & rhs);
-	virtual int						get_next_line(std::string *line);
+	virtual int						get_next_line(std::string &line);
 
 private:
 

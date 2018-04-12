@@ -24,9 +24,9 @@ DST_PATH = $(ROOT)
 LFT_PATH = 
 
 CC = clang++ -g
-CFLAGS = #-Wall -Wextra -Werror
+CFLAGS = -std=c++11 -fsanitize=address#-Wall -Wextra -Werror
 CPPFLAGS = $(addprefix -I ,$(INC_PATH))
-LDFLAGS =
+LDFLAGS = -fsanitize=address
 LDLIBS =
 
 SRC_NAME =	main.cpp \
