@@ -68,7 +68,7 @@ public:
 	virtual ~Lexer(void);
 
 	Lexer	&operator=(Lexer const & src);
-	int		get_next_tokens(std::vector<Token> *tokens);
+	int		get_next_tokens(std::vector<Token> &tokens);
 
 	class	SyntaxException : public std::exception
 	{

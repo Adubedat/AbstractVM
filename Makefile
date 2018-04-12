@@ -21,7 +21,7 @@ INC_PATH = $(ROOT)/includes
 
 OBJ_PATH = $(OBJ_FOLDER)
 DST_PATH = $(ROOT)
-LFT_PATH = 
+LFT_PATH =
 
 CC = clang++ -g
 CFLAGS = -std=c++11 -fsanitize=address#-Wall -Wextra -Werror

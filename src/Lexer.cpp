@@ -58,14 +58,14 @@ Lexer		&Lexer::operator=(Lexer const & rhs) {
 	return (*this);
 }
 
-int						Lexer::get_next_tokens(std::vector<Token> *tokens) {
+int						Lexer::get_next_tokens(std::vector<Token> &tokens) {
 
 	std::string	line;
 
 	if (_src->get_next_line(line)) {
 		try {
 
-			*tokens = line_to_tokens(line);
+			tokens = line_to_tokens(line);
 		} catch(std::exception &e) {
 
 			std::cout << e.what() << std::endl;
@@ -111,7 +111,7 @@ Token								Lexer::name(std::string &line) {
 		str += *_it;
 		_it++;
 	}
-	std::cout << str << std::endl;
+//	std::cout << str << std::endl;
 	auto found = _keywords.find(str);
 	if (found != _keywords.end())
 		return (Token(found->second));
@@ -133,7 +133,7 @@ Token								Lexer::number(std::string &line) {
 		str += *_it;
 		_it++;
 	}
-	std::cout << str << std::endl;
+	//std::cout << str << std::endl;
 	return (Token(Token::Type::Number, str));
 }
 
