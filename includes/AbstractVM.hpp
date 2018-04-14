@@ -26,7 +26,7 @@ public:
 
 private:
 
-	std::vector<s_instruction> _instruction_list;
+	std::vector<Instruction> _instruction_list;
 };
 
 #endif

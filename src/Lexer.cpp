@@ -12,10 +12,6 @@
 
 #include "Lexer.hpp"
 
-Token::Token(Token::Type type) : type(type), value("") {}
-
-Token::Token(Token::Type type, std::string value) : type(type), value(value) {}
-
 Lexer::Lexer(void) {}
 
 Lexer::Lexer(InputSource &src) {
@@ -103,7 +99,7 @@ std::vector<Token>	Lexer::line_to_tokens(std::string &line) {
 	return (token_list);
 }
 
-Token								Lexer::name(std::string &line) {
+Token								Lexer::name(std::string const &line) {
 
 	std::string	str;
 
@@ -114,12 +110,12 @@ Token								Lexer::name(std::string &line) {
 //	std::cout << str << std::endl;
 	auto found = _keywords.find(str);
 	if (found != _keywords.end())
-		return (Token(found->second));
+		return (Token(found->second, str));
 	else
 		throw Lexer::SyntaxException("Error line " + std::to_string(_src->get_line_nbr()) + ": Unrecognized token");
 }
 
-Token								Lexer::number(std::string &line) {
+Token								Lexer::number(std::string const &line) {
 
 	std::string str;
 	bool		dot_found = false;

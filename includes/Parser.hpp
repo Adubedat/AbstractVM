@@ -14,44 +14,34 @@
 # define PARSER_HPP
 
 # include "Lexer.hpp"
-
-/*! \enum 
- *
- *  Instructions that VM can accept
- */
-
-enum 	e_instruction {
-	
-	Push,
-	Pop,
-	Dump,
-	Assert,
-	Add,
-	Sub,
-	Mul,
-	Div,
-	Mod,
-	Print,
-	Exit
-};
-
-typedef struct		s_instruction {
-
-	e_instruction	instruction;
-}					t_instruction;
+# include "IOperand.hpp"
+# include "Instruction.hpp"
 
 class Parser
 {
 public:
+
+	typedef IOperand const * (Parser::*createOperandPtr)(std::string const &value) const;
+
+	IOperand const * createInt8( std::string const & value ) const;
+	IOperand const * createInt16( std::string const & value ) const;
+	IOperand const * createInt32( std::string const & value ) const;
+	IOperand const * createFloat( std::string const & value ) const;
+	IOperand const * createDouble( std::string const & value ) const;
+
 	Parser(void);
 	Parser(InputSource & src);
 	virtual ~Parser();
-	
-	std::vector<t_instruction>	get_instruction_list(void);	
+
+	std::vector<Instruction>	get_instruction_list(void);
 
 private:
-	
-	std::vector<t_instruction>	_instruction_list;
+
+	const std::vector<createOperandPtr>	makeOperandFactory() const;
+    IOperand const * 					createOperand( eOperandType type, std::string const & value ) const;
+
+	std::vector<Instruction>			_instruction_list;
+	const std::vector<createOperandPtr> _operandFactory;
 };
 
 #endif

@@ -33,7 +33,9 @@ SRC_NAME =	main.cpp \
 			InputSource.cpp \
 			AbstractVM.cpp \
 			Lexer.cpp \
-			Parser.cpp
+			Parser.cpp \
+			Token.cpp \
+			Instruction.cpp 
 
 OBJ_NAME = $(SRC_NAME:.cpp=.o)
 
