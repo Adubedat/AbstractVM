@@ -12,14 +12,16 @@
 
 #include "InputSource.hpp"
 
-InputSource::InputSource(void) : _line_nbr(0) {}
+InputSource::InputSource(void) {}
 
 InputSource::~InputSource(void) {}
 
-unsigned int	InputSource::get_line_nbr(void) const {
+unsigned int		InputSource::getLineNbr() {
 
-	return (_line_nbr);
+	return (_lineNbr);
 }
+
+unsigned int InputSource::_lineNbr = 0;
 
 /*
  *		File Input Class
@@ -60,16 +62,15 @@ FileInputSource	&FileInputSource::operator=(FileInputSource const & rhs) {
 
 	if (this != &rhs) {
 
-		_line_nbr = rhs._line_nbr;
 		_ifs = rhs.get_ifs();
 	}
 	return (*this);
 }
 
-int				FileInputSource::get_next_line(std::string &line) {
+int				FileInputSource::getNextLine(std::string &line) {
 
 	if (getline(*_ifs, line)) {
-		_line_nbr += 1;
+		InputSource::_lineNbr += 1;
 		return (1);
 	}
 	return (0);
@@ -91,17 +92,17 @@ StandardInputSource::~StandardInputSource(void) {}
 StandardInputSource		&StandardInputSource::operator=(StandardInputSource const & rhs) {
 
 	if (this != &rhs) {
-		_line_nbr = rhs._line_nbr;
 		_eof = rhs._eof;
 	}
 	return (*this);
 }
 
-int				StandardInputSource::get_next_line(std::string &line) {
+int				StandardInputSource::getNextLine(std::string &line) {
 
 	if (_eof)
 		return (0);
 	getline(std::cin, line);
+	InputSource::_lineNbr += 1;
 	if ((line).find(";;") != std::string::npos)
 		_eof = 1;
 	return (1);

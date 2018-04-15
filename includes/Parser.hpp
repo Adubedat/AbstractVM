@@ -29,19 +29,37 @@ public:
 	IOperand const * createFloat( std::string const & value ) const;
 	IOperand const * createDouble( std::string const & value ) const;
 
-	Parser(void);
 	Parser(InputSource & src);
 	virtual ~Parser();
 
-	std::vector<Instruction>	get_instruction_list(void);
+	std::vector<Instruction>	getInstructionList(void);
+
+	class	GrammarException : public std::exception
+	{
+		public:
+			GrammarException(std::string msg);
+			virtual const char* what(void) const throw();
+		private:
+			std::string	_msg;
+	};
 
 private:
 
-	const std::vector<createOperandPtr>	makeOperandFactory() const;
+	Parser(void);
+
+	void 		tokensToInstruction(std::vector<Token> const & tokens);
+	void 		checkOperand(Instruction::Type instruction, std::vector<Token>::const_iterator it);
+
+	const std::vector<createOperandPtr>				makeOperandFactory() const;
+	const std::map<Token::Type, eOperandType>		makeOperandTokens() const;
+	const std::map<Token::Type, Instruction::Type>	makeInstructionTokens() const;
+
     IOperand const * 					createOperand( eOperandType type, std::string const & value ) const;
 
-	std::vector<Instruction>			_instruction_list;
-	const std::vector<createOperandPtr> _operandFactory;
+	const std::map<Token::Type, Instruction::Type>	_instructionTokens;
+	const std::map<Token::Type, eOperandType>		_operandTokens;
+	std::vector<Instruction>						_instructionList;
+	const std::vector<createOperandPtr> 			_operandFactory;
 };
 
 #endif

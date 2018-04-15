@@ -22,8 +22,4 @@ Instruction   &Instruction::operator=(Instruction const &rhs) {
     return (*this);
 }
 
-Instruction::~Instruction() {
-    if (_operand != NULL) {
-        delete _operand;
-    }
-}
+Instruction::~Instruction() {}

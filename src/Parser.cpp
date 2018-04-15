@@ -19,17 +19,19 @@
 Parser::Parser(void) {};
 
 Parser::Parser(InputSource & src) :
- 	_operandFactory(makeOperandFactory())
+ 	_operandFactory(makeOperandFactory()),
+    _operandTokens(makeOperandTokens()),
+    _instructionTokens(makeInstructionTokens())
 	{
 
 	Lexer	lexer(src);
 	std::vector<Token>	tokens;
-	while (lexer.get_next_tokens(tokens)) {
-		for (std::vector<Token>::iterator it = tokens.begin(); it != tokens.end(); it++) {
-			std::cout << (*it).value << std::endl;
-		}
-		//if (tokens.size() > 0)
-			//std::cout << tokens[0].value << std::endl;
+	while (lexer.getNextTokens(tokens)) {
+		try {
+            tokensToInstruction(tokens);
+        } catch (std::exception &e) {
+            std::cout << e.what() << std::endl;
+        }
 	}
 
 }
@@ -37,10 +39,50 @@ Parser::Parser(InputSource & src) :
 Parser::~Parser(void) {};
 
 /*
-**					Factory initialisation
+**                  Grammar checking
 */
 
-const std::vector<Parser::createOperandPtr>		Parser::makeOperandFactory() const {
+void        Parser::tokensToInstruction(std::vector<Token> const & tokens) {
+
+    std::vector<Token>::const_iterator    it = tokens.begin();
+
+    if (tokens.empty())
+        return ;
+    auto found = _instructionTokens.find(it->type);
+    if (found == _instructionTokens.end())
+        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Each line must begin with an instruction");
+    else if (it->type == Token::Type::Push || it->type == Token::Type::Assert) {
+        if (tokens.size() != 5)
+            throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Unvalid line, Instr Operand(value) expected");
+        checkOperand(found->second, it);
+    }
+    else if (tokens.size() > 1)
+        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Unexpected expression following instruction");
+    else
+        _instructionList.push_back(Instruction(found->second));
+}
+
+void        Parser::checkOperand(Instruction::Type instruction, std::vector<Token>::const_iterator it) {
+
+    std::string str;
+    auto found = _operandTokens.find((++it)->type);
+    if (found == _operandTokens.end())
+        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : This instruction msut be followed by an operand");
+    if ((++it)->type != Token::Type::OpenParenthesis)
+        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Expected opened parenthesis after operand type");
+    if ((++it)->type != Token::Type::Number)
+        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Expected value after parenthesis");
+    str = it->value;
+    if ((++it)->type != Token::Type::ClosedParenthesis)
+        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Expected closed parenthesis after value");
+    _instructionList.push_back(Instruction(instruction, createOperand(found->second, str)));
+}
+
+/*
+**					Initialisations
+*/
+
+const std::vector<Parser::createOperandPtr>         Parser::makeOperandFactory() const {
 
 	std::vector<Parser::createOperandPtr> factory;
 
@@ -53,10 +95,45 @@ const std::vector<Parser::createOperandPtr>		Parser::makeOperandFactory() const 
 	return (factory);
 }
 
+const std::map<Token::Type, eOperandType>			Parser::makeOperandTokens() const {
 
-std::vector<Instruction>	Parser::get_instruction_list(void) {
+    std::map<Token::Type, eOperandType> map;
 
-	return (_instruction_list);
+    map[Token::Type::Int8]  = Int8;
+    map[Token::Type::Int16] = Int16;
+    map[Token::Type::Int32] = Int32;
+    map[Token::Type::Float] = Float;
+    map[Token::Type::Double] = Double;
+
+    return (map);
+}
+
+const std::map<Token::Type, Instruction::Type>      Parser::makeInstructionTokens() const {
+
+    std::map<Token::Type, Instruction::Type> map;
+
+    map[Token::Type::Push]   = Instruction::Type::Push;
+    map[Token::Type::Pop]    = Instruction::Type::Pop;
+    map[Token::Type::Dump]   = Instruction::Type::Dump;
+    map[Token::Type::Assert] = Instruction::Type::Assert;
+    map[Token::Type::Add]    = Instruction::Type::Add;
+    map[Token::Type::Sub]    = Instruction::Type::Sub;
+    map[Token::Type::Mul]    = Instruction::Type::Mul;
+    map[Token::Type::Div]    = Instruction::Type::Div;
+    map[Token::Type::Mod]    = Instruction::Type::Mod;
+    map[Token::Type::Print]  = Instruction::Type::Print;
+    map[Token::Type::Exit]   = Instruction::Type::Exit;
+
+    return (map);
+}
+
+/*
+**                  Getters and setters
+*/
+
+std::vector<Instruction>	Parser::getInstructionList(void) {
+
+	return (_instructionList);
 }
 
 /*
@@ -88,4 +165,17 @@ IOperand        const * Parser::createFloat(std::string const & value) const {
 
 IOperand        const * Parser::createDouble(std::string const & value) const {
     return (new Operand<double>(std::stoi(value), Double));
+}
+
+/*
+**                  Exception
+*/
+
+Parser::GrammarException::GrammarException(std::string msg) :
+	_msg(msg)
+{}
+
+const char*		Parser::GrammarException::what(void) const throw() {
+
+	return (_msg.c_str());
 }

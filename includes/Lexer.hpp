@@ -17,7 +17,7 @@
 # include "Token.hpp"
 # include <vector>
 # include <sstream>
-# include <unordered_map>
+# include <map>
 
 class Lexer
 {
@@ -28,7 +28,7 @@ public:
 	virtual ~Lexer(void);
 
 	Lexer	&operator=(Lexer const & src);
-	int		get_next_tokens(std::vector<Token> &tokens);
+	int		getNextTokens(std::vector<Token> &tokens);
 
 	class	SyntaxException : public std::exception
 	{
@@ -42,12 +42,12 @@ public:
 private:
 
 	Lexer(void);
-	InputSource*									_src;
-	std::string::iterator							_it;
-	std::unordered_map<std::string, Token::Type>	_keywords;
-	std::unordered_map<char, Token::Type> 			_reserved_char;
+	InputSource*							_src;
+	std::string::iterator					_it;
+	std::map<std::string, Token::Type>		_keywords;
+	std::map<char, Token::Type> 			_reserved_char;
 
-	std::vector<Token>			line_to_tokens(std::string &line);
+	std::vector<Token>			lineToTokens(std::string &line);
 	Token 						name(std::string const &line);
 	Token						number(std::string const &line);
 

@@ -54,14 +54,14 @@ Lexer		&Lexer::operator=(Lexer const & rhs) {
 	return (*this);
 }
 
-int						Lexer::get_next_tokens(std::vector<Token> &tokens) {
+int						Lexer::getNextTokens(std::vector<Token> &tokens) {
 
 	std::string	line;
 
-	if (_src->get_next_line(line)) {
+	if (_src->getNextLine(line)) {
 		try {
 
-			tokens = line_to_tokens(line);
+			tokens = lineToTokens(line);
 		} catch(std::exception &e) {
 
 			std::cout << e.what() << std::endl;
@@ -71,7 +71,7 @@ int						Lexer::get_next_tokens(std::vector<Token> &tokens) {
 	return (0);
 }
 
-std::vector<Token>	Lexer::line_to_tokens(std::string &line) {
+std::vector<Token>	Lexer::lineToTokens(std::string &line) {
 
 	std::vector<Token>			token_list;
 
@@ -92,7 +92,7 @@ std::vector<Token>	Lexer::line_to_tokens(std::string &line) {
 				token_list.push_back(Token(found->second));
 			}
 			else {
-				throw Lexer::SyntaxException("Error line " + std::to_string(_src->get_line_nbr()) + ": Unexpected character");
+				throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + ": Unexpected character");
 			}
 		}
 	}
@@ -112,7 +112,7 @@ Token								Lexer::name(std::string const &line) {
 	if (found != _keywords.end())
 		return (Token(found->second, str));
 	else
-		throw Lexer::SyntaxException("Error line " + std::to_string(_src->get_line_nbr()) + ": Unrecognized token");
+		throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + ": Unrecognized token");
 }
 
 Token								Lexer::number(std::string const &line) {
@@ -123,7 +123,7 @@ Token								Lexer::number(std::string const &line) {
 	while (isdigit(*_it) || *_it == '.') {
 		if (*_it == '.') {
 			if (dot_found)
-				throw Lexer::SyntaxException("Error line " + std::to_string(_src->get_line_nbr()) + ": Unvalid number passed to operand");
+				throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + ": Unvalid number passed to operand");
 			dot_found = true;
 		}
 		str += *_it;
