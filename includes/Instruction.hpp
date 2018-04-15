@@ -29,14 +29,16 @@ public:
 	Instruction(Instruction::Type const type);
 	Instruction(Instruction::Type instructionType, IOperand const *operand);
 
-    Instruction   &operator=(Instruction const &rhs);
+    Instruction 	&operator=(Instruction const &rhs);
+
+	std::string const  	toString() const;
 
     virtual ~Instruction();
 
 private:
 
-	Type               _instruction;
-	const IOperand*    _operand;
+	Type				_instruction;
+	const IOperand*		_operand;
 
 };
 

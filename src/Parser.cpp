@@ -164,7 +164,7 @@ IOperand        const * Parser::createFloat(std::string const & value) const {
 }
 
 IOperand        const * Parser::createDouble(std::string const & value) const {
-    return (new Operand<double>(std::stoi(value), Double));
+    return (new Operand<double>(std::stod(value), Double));
 }
 
 /*

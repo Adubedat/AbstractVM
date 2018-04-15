@@ -22,4 +22,31 @@ Instruction   &Instruction::operator=(Instruction const &rhs) {
     return (*this);
 }
 
+std::string const       Instruction::toString() const {
+    switch (_instruction) {
+        case Type::Push:
+            return "Push " + _operand->toString();
+        case Type::Pop:
+            return "Pop";
+        case Type::Dump:
+            return "Dump";
+        case Type::Assert:
+            return "Assert " + _operand->toString();
+        case Type::Add:
+            return "Add";
+        case Type::Sub:
+            return "Sub";
+        case Type::Mul:
+            return "Mul";
+        case Type::Div:
+            return "Div";
+        case Type::Mod:
+            return "Mod";
+        case Type::Print:
+            return "Print";
+        case Type::Exit:
+            return "Exit";
+    }
+}
+
 Instruction::~Instruction() {}
