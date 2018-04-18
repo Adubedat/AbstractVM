@@ -26,6 +26,7 @@ public:
 
 	static unsigned int		getLineNbr();
 	virtual	int				getNextLine(std::string &line) = 0;
+	virtual bool			isCin();
 
 protected:
 
@@ -60,6 +61,7 @@ public:
 
 	virtual StandardInputSource		&operator=(StandardInputSource const & rhs);
 	virtual int						getNextLine(std::string &line);
+	virtual bool					isCin();
 
 private:
 

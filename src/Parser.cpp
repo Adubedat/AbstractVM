@@ -26,10 +26,11 @@ Parser::Parser(InputSource & src) :
 
 	Lexer	lexer(src);
 	std::vector<Token>	tokens;
+
+    _src = &src;
 	while (lexer.getNextTokens(tokens)) {
 		try {
             tokensToInstruction(tokens);
-            tokens.clear();
         } catch (std::exception &e) {
             std::cout << e.what() << std::endl;
         }
@@ -59,6 +60,8 @@ void        Parser::tokensToInstruction(std::vector<Token> const & tokens) {
     }
     else if (tokens.size() > 1)
         throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Unexpected expression following instruction");
+    else if (_src->isCin())
+        Instruction(found->second).execute();
     else
         _instructionList.push_back(Instruction(found->second));
 }
@@ -76,7 +79,10 @@ void        Parser::checkOperand(Instruction::Type instruction, std::vector<Toke
     str = it->value;
     if ((++it)->type != Token::Type::ClosedParenthesis)
         throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Expected closed parenthesis after value");
-    _instructionList.push_back(Instruction(instruction, createOperand(found->second, str)));
+    if (_src->isCin())
+        Instruction(instruction, createOperand(found->second, str)).execute();
+    else
+        _instructionList.push_back(Instruction(instruction, createOperand(found->second, str)));
 }
 
 /*

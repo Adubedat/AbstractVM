@@ -22,6 +22,7 @@ public:
         if (this != &rhs) {
             _value = rhs._value;
             _type = rhs._type;
+            _str = rhs._str;
         }
         return (*this);
     }

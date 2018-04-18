@@ -21,6 +21,10 @@ unsigned int		InputSource::getLineNbr() {
 	return (_lineNbr);
 }
 
+bool				InputSource::isCin() {
+	return (false);
+}
+
 unsigned int InputSource::_lineNbr = 0;
 
 /*
@@ -40,7 +44,7 @@ FileInputSource::FileInputSource(std::string file_name) {
 		_ifs = new std::ifstream(file_name, std::ifstream::in);
 		_ifs->exceptions(std::ifstream::failbit);
 	} catch (const std::exception & e) {
-		std::cerr << "Error when opening file : " << e.what() << std::endl;
+		std::cerr << "Error when opening file" << std::endl;
 	}
 }
 
@@ -49,7 +53,7 @@ FileInputSource::~FileInputSource(void) {
 	try {
 		delete _ifs;
 	} catch (const std::exception & e) {
-		std::cerr << "Error when closing file stream : " << e.what() << std::endl;
+		std::cerr << "Error when closing file stream" << std::endl;
 	}
 }
 
@@ -95,6 +99,10 @@ StandardInputSource		&StandardInputSource::operator=(StandardInputSource const &
 		_eof = rhs._eof;
 	}
 	return (*this);
+}
+
+bool			StandardInputSource::isCin() {
+	return (true);
 }
 
 int				StandardInputSource::getNextLine(std::string &line) {

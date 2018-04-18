@@ -35,7 +35,7 @@ SRC_NAME =	main.cpp \
 			Lexer.cpp \
 			Parser.cpp \
 			Token.cpp \
-			Instruction.cpp 
+			Instruction.cpp
 
 OBJ_NAME = $(SRC_NAME:.cpp=.o)
 

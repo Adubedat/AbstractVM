@@ -13,9 +13,8 @@
 #ifndef PARSER_HPP
 # define PARSER_HPP
 
-# include "Lexer.hpp"
-# include "IOperand.hpp"
 # include "Instruction.hpp"
+# include "Lexer.hpp"
 # include <climits>
 # include <cfloat>
 
@@ -24,12 +23,6 @@ class Parser
 public:
 
 	typedef IOperand const * (Parser::*createOperandPtr)(std::string const &value) const;
-
-	IOperand const * createInt8( std::string const & value ) const;
-	IOperand const * createInt16( std::string const & value ) const;
-	IOperand const * createInt32( std::string const & value ) const;
-	IOperand const * createFloat( std::string const & value ) const;
-	IOperand const * createDouble( std::string const & value ) const;
 
 	Parser(InputSource & src);
 	virtual ~Parser();
@@ -56,12 +49,19 @@ private:
 	const std::map<Token::Type, eOperandType>		makeOperandTokens() const;
 	const std::map<Token::Type, Instruction::Type>	makeInstructionTokens() const;
 
-    IOperand const * 					createOperand( eOperandType type, std::string const & value ) const;
+    IOperand const * createOperand( eOperandType type, std::string const & value ) const;
+
+	IOperand const * createInt8( std::string const & value ) const;
+	IOperand const * createInt16( std::string const & value ) const;
+	IOperand const * createInt32( std::string const & value ) const;
+	IOperand const * createFloat( std::string const & value ) const;
+	IOperand const * createDouble( std::string const & value ) const;
 
 	const std::map<Token::Type, Instruction::Type>	_instructionTokens;
 	const std::map<Token::Type, eOperandType>		_operandTokens;
 	std::vector<Instruction>						_instructionList;
 	const std::vector<createOperandPtr> 			_operandFactory;
+	InputSource*									_src;
 };
 
 #endif

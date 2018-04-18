@@ -15,6 +15,7 @@
 
 # include "InputSource.hpp"
 # include "Parser.hpp"
+# include <deque>
 
 class AbstractVM
 {
@@ -22,11 +23,15 @@ public:
 
 	AbstractVM(void);
 	AbstractVM(InputSource & src);
+
+	static std::deque<IOperand const *>		&getStack();
+
 	virtual ~AbstractVM ();
 
 private:
 
-	std::vector<Instruction> _instructionList;
+	std::vector<Instruction>			_instructionList;
+	static std::deque<IOperand const *>	_stack;
 };
 
 #endif

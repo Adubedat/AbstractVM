@@ -60,7 +60,7 @@ int						Lexer::getNextTokens(std::vector<Token> &tokens) {
 
 	if (_src->getNextLine(line)) {
 		try {
-
+			tokens.clear();
 			tokens = lineToTokens(line);
 		} catch(std::exception &e) {
 
@@ -92,7 +92,7 @@ std::vector<Token>	Lexer::lineToTokens(std::string &line) {
 				token_list.push_back(Token(found->second));
 			}
 			else {
-				throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + ": Unexpected character");
+				throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Unexpected character");
 			}
 		}
 	}
