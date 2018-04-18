@@ -16,6 +16,8 @@
 # include "Lexer.hpp"
 # include "IOperand.hpp"
 # include "Instruction.hpp"
+# include <climits>
+# include <cfloat>
 
 class Parser
 {

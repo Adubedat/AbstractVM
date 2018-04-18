@@ -81,7 +81,7 @@ std::vector<Token>	Lexer::lineToTokens(std::string &line) {
 			return(token_list);
 		else if (isalpha(*_it))
 			token_list.push_back(name(line));
-		else if (isdigit(*_it))
+		else if (isdigit(*_it) || *_it == '-')
 			token_list.push_back(number(line));
 		else if (*_it == ' ' || *_it == '\t')
 			_it++;
@@ -107,7 +107,6 @@ Token								Lexer::name(std::string const &line) {
 		str += *_it;
 		_it++;
 	}
-//	std::cout << str << std::endl;
 	auto found = _keywords.find(str);
 	if (found != _keywords.end())
 		return (Token(found->second, str));
@@ -120,6 +119,10 @@ Token								Lexer::number(std::string const &line) {
 	std::string str;
 	bool		dot_found = false;
 
+	if (*_it == '-') {
+		str += *_it;
+		_it++;
+	}
 	while (isdigit(*_it) || *_it == '.') {
 		if (*_it == '.') {
 			if (dot_found)
@@ -129,7 +132,6 @@ Token								Lexer::number(std::string const &line) {
 		str += *_it;
 		_it++;
 	}
-	//std::cout << str << std::endl;
 	return (Token(Token::Type::Number, str));
 }
 
