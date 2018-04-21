@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Parser.hpp"
+#include "Exceptions.hpp"
 
 /*
 **					Constructors and destructor
@@ -52,14 +53,14 @@ void        Parser::tokensToInstruction(std::vector<Token> const & tokens) {
         return ;
     auto found = _instructionTokens.find(it->type);
     if (found == _instructionTokens.end())
-        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Each line must begin with an instruction");
+        throw SyntaxException("Each line must begin with an instruction");
     else if (it->type == Token::Type::Push || it->type == Token::Type::Assert) {
         if (tokens.size() != 5)
-            throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Unvalid line, Instr Operand(value) expected");
+            throw SyntaxException("Unvalid line, Instr Operand(value) expected");
         checkOperand(found->second, it);
     }
     else if (tokens.size() > 1)
-        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Unexpected expression following instruction");
+        throw SyntaxException("Unexpected expression following instruction");
     else if (_src->isCin())
         Instruction(found->second).execute();
     else
@@ -71,14 +72,14 @@ void        Parser::checkOperand(Instruction::Type instruction, std::vector<Toke
     std::string str;
     auto found = _operandTokens.find((++it)->type);
     if (found == _operandTokens.end())
-        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : This instruction msut be followed by an operand");
+        throw SyntaxException("This instruction must be followed by an operand");
     if ((++it)->type != Token::Type::OpenParenthesis)
-        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Expected opened parenthesis after operand type");
+        throw SyntaxException("Opened parenthesis expected after operand type");
     if ((++it)->type != Token::Type::Number)
-        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Expected value after parenthesis");
+        throw SyntaxException("Value expected after parenthesis");
     str = it->value;
     if ((++it)->type != Token::Type::ClosedParenthesis)
-        throw Parser::GrammarException("Error line " + std::to_string(InputSource::getLineNbr()) + " : Expected closed parenthesis after value");
+        throw SyntaxException("Closed parenthesis expected after value");
     if (_src->isCin())
         Instruction(instruction, createOperand(found->second, str)).execute();
     else
@@ -156,10 +157,10 @@ IOperand        const * Parser::createInt8(std::string const & value) const {
     try {
         int nbr = std::stoi(value);
         if (nbr < CHAR_MIN || nbr > CHAR_MAX)
-            throw Lexer::SyntaxException("");
+            throw OutOfRangeException("");
         return (new Operand<int8_t>(nbr, Int8));
     } catch (std::exception &e) {
-        throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + " : int8 value must be between " + std::to_string(CHAR_MIN) + " and " + std::to_string(CHAR_MAX));
+        throw OutOfRangeException("int8 value must be between " + std::to_string(CHAR_MIN) + " and " + std::to_string(CHAR_MAX));
     }
 }
 
@@ -167,10 +168,10 @@ IOperand        const * Parser::createInt16(std::string const & value) const {
     try {
         int nbr = std::stoi(value);
         if (nbr < SHRT_MIN || nbr > SHRT_MAX)
-            throw Lexer::SyntaxException("");
+            throw OutOfRangeException("");
         return (new Operand<int16_t>(nbr, Int16));
     } catch (std::exception &e) {
-        throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + " : int16 value must be between " + std::to_string(SHRT_MIN) + " and " + std::to_string(SHRT_MAX));
+        throw OutOfRangeException("int16 value must be between " + std::to_string(SHRT_MIN) + " and " + std::to_string(SHRT_MAX));
     }
 }
 
@@ -178,10 +179,10 @@ IOperand        const * Parser::createInt32(std::string const & value) const {
     try {
         int nbr = std::stoi(value);
         if (nbr < INT_MIN || nbr > INT_MAX)
-            throw Lexer::SyntaxException("");
+            throw OutOfRangeException("");
         return (new Operand<int32_t>(nbr, Int32));
     } catch (std::exception &e) {
-        throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + " : int32 value must be between " + std::to_string(INT_MIN) + " and " + std::to_string(INT_MAX));
+        throw OutOfRangeException("int32 value must be between " + std::to_string(INT_MIN) + " and " + std::to_string(INT_MAX));
     }
 }
 
@@ -189,10 +190,10 @@ IOperand        const * Parser::createFloat(std::string const & value) const {
     try {
         float nbr = std::stof(value);
         if (nbr < -FLT_MAX || nbr > FLT_MAX)
-            throw Lexer::SyntaxException("");
+            throw OutOfRangeException("");
         return (new Operand<float>(nbr, Float));
     } catch (std::exception &e) {
-        throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + " : float value must be between " + std::to_string(-FLT_MAX) + " and " + std::to_string(FLT_MAX));
+        throw OutOfRangeException("float value must be between " + std::to_string(-FLT_MAX) + " and " + std::to_string(FLT_MAX));
     }
 }
 
@@ -200,22 +201,9 @@ IOperand        const * Parser::createDouble(std::string const & value) const {
     try {
         double nbr = std::stod(value);
         if (nbr < -DBL_MAX || nbr > DBL_MAX)
-            throw Lexer::SyntaxException("");
+            throw OutOfRangeException("");
         return (new Operand<double>(nbr, Double));
     } catch (std::exception &e) {
-        throw Lexer::SyntaxException("Error line " + std::to_string(InputSource::getLineNbr()) + " : double value must be between " + std::to_string(-DBL_MAX) + " and " + std::to_string(DBL_MAX));
+        throw OutOfRangeException("double value must be between " + std::to_string(-DBL_MAX) + " and " + std::to_string(DBL_MAX));
     }
-}
-
-/*
-**                  Exception
-*/
-
-Parser::GrammarException::GrammarException(std::string msg) :
-	_msg(msg)
-{}
-
-const char*		Parser::GrammarException::what(void) const throw() {
-
-	return (_msg.c_str());
 }

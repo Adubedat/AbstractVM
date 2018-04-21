@@ -1,5 +1,6 @@
 #include "Instruction.hpp"
 #include "AbstractVM.hpp"
+#include "Exceptions.hpp"
 
 /*
 **                  Constructors, destructor and coplien functions
@@ -69,12 +70,16 @@ void        Instruction::execute( void ) const {
 
 void        Instruction::push( void ) const {
     std::deque<IOperand const *>    &stack = AbstractVM::getStack();
-    
+
     stack.push_front(_operand);
 }
 
 void        Instruction::pop( void ) const {
+    std::deque<IOperand const *>    &stack = AbstractVM::getStack();
 
+    if (stack.empty())
+        throw   RuntimeException("Pop on empty stack");
+    stack.pop_front();
 }
 
 void        Instruction::dump( void ) const {

@@ -111,7 +111,7 @@ int				StandardInputSource::getNextLine(std::string &line) {
 		return (0);
 	getline(std::cin, line);
 	InputSource::_lineNbr += 1;
-	if ((line).find(";;") != std::string::npos)
+	if ((line).find(";;") != std::string::npos || std::cin.eof() == 1)
 		_eof = 1;
 	return (1);
 }

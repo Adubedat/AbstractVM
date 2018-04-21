@@ -29,14 +29,7 @@ public:
 
 	std::vector<Instruction>	getInstructionList(void);
 
-	class	GrammarException : public std::exception
-	{
-		public:
-			GrammarException(std::string msg);
-			virtual const char* what(void) const throw();
-		private:
-			std::string	_msg;
-	};
+	
 
 private:
 

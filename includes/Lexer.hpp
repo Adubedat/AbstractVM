@@ -30,15 +30,6 @@ public:
 	Lexer	&operator=(Lexer const & src);
 	int		getNextTokens(std::vector<Token> &tokens);
 
-	class	SyntaxException : public std::exception
-	{
-		public:
-			SyntaxException(std::string msg);
-			virtual const char* what(void) const throw();
-		private:
-			std::string	_msg;
-	};
-
 private:
 
 	Lexer(void);
