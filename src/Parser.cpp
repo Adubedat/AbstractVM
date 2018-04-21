@@ -13,6 +13,8 @@
 #include "Parser.hpp"
 #include "Exceptions.hpp"
 #include "Factory.hpp"
+#include "Lexer.hpp"
+
 
 /*
 **					Constructors and destructor
@@ -21,8 +23,8 @@
 Parser::Parser(void) {};
 
 Parser::Parser(InputSource & src) :
-    _operandTokens(makeOperandTokens()),
-    _instructionTokens(makeInstructionTokens())
+    _instructionTokens(makeInstructionTokens()),
+    _operandTokens(makeOperandTokens())
 	{
 
 	Lexer	lexer(src);

@@ -39,8 +39,8 @@ private:
 	std::map<char, Token::Type> 			_reserved_char;
 
 	std::vector<Token>			lineToTokens(std::string &line);
-	Token 						name(std::string const &line);
-	Token						number(std::string const &line);
+	Token 						name();
+	Token						number();
 
 };
 

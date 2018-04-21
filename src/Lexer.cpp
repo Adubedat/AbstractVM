@@ -80,9 +80,9 @@ std::vector<Token>	Lexer::lineToTokens(std::string &line) {
 		if (*_it == ';')
 			return(token_list);
 		else if (isalpha(*_it))
-			token_list.push_back(name(line));
+			token_list.push_back(name());
 		else if (isdigit(*_it) || *_it == '-')
-			token_list.push_back(number(line));
+			token_list.push_back(number());
 		else if (*_it == ' ' || *_it == '\t')
 			_it++;
 		else {
@@ -99,7 +99,7 @@ std::vector<Token>	Lexer::lineToTokens(std::string &line) {
 	return (token_list);
 }
 
-Token								Lexer::name(std::string const &line) {
+Token								Lexer::name() {
 
 	std::string	str;
 
@@ -114,7 +114,7 @@ Token								Lexer::name(std::string const &line) {
 		throw LexicalException("Unrecognized token");
 }
 
-Token								Lexer::number(std::string const &line) {
+Token								Lexer::number() {
 
 	std::string str;
 	bool		dot_found = false;

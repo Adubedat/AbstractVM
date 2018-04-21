@@ -29,10 +29,10 @@ public:
             case Int32:
                 _str = "Int32 : " + std::to_string(value);
                 break;
-            case Double:
+            case Float:
                 _str = "Float : " + std::to_string(value);
                 break;
-            case Float:
+            case Double:
                 _str = "Double : " + std::to_string(value);
                 break;
         }
@@ -40,15 +40,11 @@ public:
 
     Operand<T>  &operator=(Operand<T> const &rhs) {
         if (this != &rhs) {
-            _value = rhs._value;
+            _value = dynamic_cast<Operand*>(rhs)->_value;
             _type = rhs._type;
             _str = rhs._str;
         }
         return (*this);
-    }
-
-    int             getValue(void) const {
-        return  (_value);
     }
 
     int             getPrecision(void) const {
@@ -60,15 +56,15 @@ public:
     }
 
     bool        operator==(IOperand const &rhs) const {
-        return (_value == rhs.getValue()
+        return (_value == dynamic_cast<Operand*>(rhs)->_value
             && _type == rhs.getType()
             && _str == rhs.toString());
     }
 
     IOperand        const * operator+(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
-        double lvalue = static_cast<double>(this->getValue());
-        double rvalue = static_cast<double>(rhs.getValue());
+        double lvalue = static_cast<double>(this->_value);
+        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
         double result = lvalue + rvalue;
 
         return (Factory::getInstance()->createOperand(type, std::to_string(result)));
@@ -76,8 +72,8 @@ public:
 
     IOperand        const * operator-(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
-        double lvalue = static_cast<double>(this->getValue());
-        double rvalue = static_cast<double>(rhs.getValue());
+        double lvalue = static_cast<double>(this->_value);
+        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
         double result = lvalue - rvalue;
 
         return (Factory::getInstance()->createOperand(type, std::to_string(result)));
@@ -85,8 +81,8 @@ public:
 
     IOperand        const * operator*(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
-        double lvalue = static_cast<double>(this->getValue());
-        double rvalue = static_cast<double>(rhs.getValue());
+        double lvalue = static_cast<double>(this->_value);
+        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
         double result = lvalue * rvalue;
 
         return (Factory::getInstance()->createOperand(type, std::to_string(result)));
@@ -94,8 +90,8 @@ public:
 
     IOperand        const * operator/(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
-        double lvalue = static_cast<double>(this->getValue());
-        double rvalue = static_cast<double>(rhs.getValue());
+        double lvalue = static_cast<double>(this->_value);
+        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
 
         if (rvalue == 0.0)
             throw RuntimeException("Division by zero");
@@ -106,8 +102,8 @@ public:
 
     IOperand        const * operator%(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
-        double lvalue = static_cast<double>(this->getValue());
-        double rvalue = static_cast<double>(rhs.getValue());
+        double lvalue = static_cast<double>(this->_value);
+        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
 
         if (rvalue == 0.0)
             throw RuntimeException("Division by zero");

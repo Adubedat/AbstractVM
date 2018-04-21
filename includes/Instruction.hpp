@@ -1,9 +1,8 @@
 #ifndef INSTRUCTION_HPP
 # define INSTRUCTION_HPP
 
-# include <iostream>
-# include <deque>
-# include "Operand.hpp"
+# include "IOperand.hpp"
+# include <string>
 
 class	Instruction
 {

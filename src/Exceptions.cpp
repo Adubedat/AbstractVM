@@ -11,8 +11,8 @@ const char*		SyntaxException::what(void) const throw() {
 }
 
 LexicalException::LexicalException(std::string msg) :
-	_msg(std::string(COL_RED) + "[Lexical error line " + std::to_string(InputSource::getLineNbr()) + "] " + COL_RES + msg),
-    std::invalid_argument("")
+    std::invalid_argument(""),
+	_msg(std::string(COL_RED) + "[Lexical error line " + std::to_string(InputSource::getLineNbr()) + "] " + COL_RES + msg)
 {}
 
 const char*		LexicalException::what(void) const throw() {
@@ -21,8 +21,8 @@ const char*		LexicalException::what(void) const throw() {
 }
 
 RuntimeException::RuntimeException(std::string msg) :
-	_msg(std::string(COL_RED) + "[Runtime error] " + COL_RES + msg),
-    std::runtime_error("")
+    std::runtime_error(""),
+	_msg(std::string(COL_RED) + "[Runtime error] " + COL_RES + msg)
 {}
 
 const char*		RuntimeException::what(void) const throw() {
@@ -31,8 +31,8 @@ const char*		RuntimeException::what(void) const throw() {
 }
 
 OutOfRangeException::OutOfRangeException(std::string msg) :
-	_msg(std::string(COL_RED) + "[Out of range error line " + std::to_string(InputSource::getLineNbr()) + "] " + COL_RES + msg),
-    std::out_of_range("")
+    std::out_of_range(""),
+	_msg(std::string(COL_RED) + "[Out of range error line " + std::to_string(InputSource::getLineNbr()) + "] " + COL_RES + msg)    
 {}
 
 const char*		OutOfRangeException::what(void) const throw() {

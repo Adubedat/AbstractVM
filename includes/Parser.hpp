@@ -14,7 +14,10 @@
 # define PARSER_HPP
 
 # include "Instruction.hpp"
-# include "Lexer.hpp"
+# include "Token.hpp"
+# include "InputSource.hpp"
+# include <map>
+# include <vector>
 
 class Parser
 {
