@@ -65,7 +65,14 @@ Instruction::~Instruction() {}
 
 void        Instruction::execute( void ) const {
     Instruction::instructionPtr p = _instructionsArray[_instruction];
-    (this->*p)();
+    try {
+        (this->*p)();
+    } catch (RuntimeException &e) {
+        std::cout << e.what() << std::endl;
+        std::exit(EXIT_FAILURE);
+    } catch (std::exception &e) {
+        std::cout << e.what() << std::endl;
+    }
 }
 
 void        Instruction::push( void ) const {
@@ -91,11 +98,24 @@ void        Instruction::dump( void ) const {
 }
 
 void        Instruction::assert( void ) const {
+    std::deque<IOperand const *>    &stack = AbstractVM::getStack();
 
+    if (stack.empty())
+        throw   RuntimeException("Assert on empty stack");
+    if (!(*(stack.front()) == *_operand))
+        throw   RuntimeException("Assert operand is not equal to the first stack element");
 }
 
 void        Instruction::add( void ) const {
+    std::deque<IOperand const *>    &stack = AbstractVM::getStack();
+    IOperand const *                newElem;
 
+    if (stack.size() < 2)
+        throw   RuntimeException("Add instruction with less than two operands in stack");
+    newElem = *stack[0] + *stack[1];
+    stack.pop_front();
+    stack.pop_front();
+    stack.push_front(newElem);
 }
 
 void        Instruction::sub( void ) const {
@@ -115,7 +135,13 @@ void        Instruction::mod( void ) const {
 }
 
 void        Instruction::print( void ) const {
+    std::deque<IOperand const *>    &stack = AbstractVM::getStack();
 
+    if (stack.empty())
+        throw   RuntimeException("Print on empty stack");
+    if (stack.front()->getType() != Int8)
+        throw   RuntimeException("First stack element is not an Int8 for print instruction");
+    std::cout << static_cast<char>(stack.front()->getValue()) << std::endl;
 }
 
 void        Instruction::exit( void ) const {

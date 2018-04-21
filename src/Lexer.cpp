@@ -64,7 +64,6 @@ int						Lexer::getNextTokens(std::vector<Token> &tokens) {
 			tokens.clear();
 			tokens = lineToTokens(line);
 		} catch(std::exception &e) {
-
 			std::cout << e.what() << std::endl;
 		}
 		return (1);

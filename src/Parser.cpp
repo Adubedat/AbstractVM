@@ -12,6 +12,7 @@
 
 #include "Parser.hpp"
 #include "Exceptions.hpp"
+#include "Factory.hpp"
 
 /*
 **					Constructors and destructor
@@ -20,7 +21,6 @@
 Parser::Parser(void) {};
 
 Parser::Parser(InputSource & src) :
- 	_operandFactory(makeOperandFactory()),
     _operandTokens(makeOperandTokens()),
     _instructionTokens(makeInstructionTokens())
 	{
@@ -81,27 +81,14 @@ void        Parser::checkOperand(Instruction::Type instruction, std::vector<Toke
     if ((++it)->type != Token::Type::ClosedParenthesis)
         throw SyntaxException("Closed parenthesis expected after value");
     if (_src->isCin())
-        Instruction(instruction, createOperand(found->second, str)).execute();
+        Instruction(instruction, Factory::getInstance()->createOperand(found->second, str)).execute();
     else
-        _instructionList.push_back(Instruction(instruction, createOperand(found->second, str)));
+        _instructionList.push_back(Instruction(instruction, Factory::getInstance()->createOperand(found->second, str)));
 }
 
 /*
 **					Initialisations
 */
-
-const std::vector<Parser::createOperandPtr>         Parser::makeOperandFactory() const {
-
-	std::vector<Parser::createOperandPtr> factory;
-
-	factory.push_back(&Parser::createInt8);
-	factory.push_back(&Parser::createInt16);
-	factory.push_back(&Parser::createInt32);
-	factory.push_back(&Parser::createFloat);
-	factory.push_back(&Parser::createDouble);
-
-	return (factory);
-}
 
 const std::map<Token::Type, eOperandType>			Parser::makeOperandTokens() const {
 
@@ -142,68 +129,4 @@ const std::map<Token::Type, Instruction::Type>      Parser::makeInstructionToken
 std::vector<Instruction>	Parser::getInstructionList(void) {
 
 	return (_instructionList);
-}
-
-/*
-**					Operand creation functions
-*/
-
-IOperand        const * Parser::createOperand(eOperandType type, std::string const & value) const {
-    Parser::createOperandPtr p = this->_operandFactory[type];
-    return ((this->*p)(value));
-}
-
-IOperand        const * Parser::createInt8(std::string const & value) const {
-    try {
-        int nbr = std::stoi(value);
-        if (nbr < CHAR_MIN || nbr > CHAR_MAX)
-            throw OutOfRangeException("");
-        return (new Operand<int8_t>(nbr, Int8));
-    } catch (std::exception &e) {
-        throw OutOfRangeException("int8 value must be between " + std::to_string(CHAR_MIN) + " and " + std::to_string(CHAR_MAX));
-    }
-}
-
-IOperand        const * Parser::createInt16(std::string const & value) const {
-    try {
-        int nbr = std::stoi(value);
-        if (nbr < SHRT_MIN || nbr > SHRT_MAX)
-            throw OutOfRangeException("");
-        return (new Operand<int16_t>(nbr, Int16));
-    } catch (std::exception &e) {
-        throw OutOfRangeException("int16 value must be between " + std::to_string(SHRT_MIN) + " and " + std::to_string(SHRT_MAX));
-    }
-}
-
-IOperand        const * Parser::createInt32(std::string const & value) const {
-    try {
-        int nbr = std::stoi(value);
-        if (nbr < INT_MIN || nbr > INT_MAX)
-            throw OutOfRangeException("");
-        return (new Operand<int32_t>(nbr, Int32));
-    } catch (std::exception &e) {
-        throw OutOfRangeException("int32 value must be between " + std::to_string(INT_MIN) + " and " + std::to_string(INT_MAX));
-    }
-}
-
-IOperand        const * Parser::createFloat(std::string const & value) const {
-    try {
-        float nbr = std::stof(value);
-        if (nbr < -FLT_MAX || nbr > FLT_MAX)
-            throw OutOfRangeException("");
-        return (new Operand<float>(nbr, Float));
-    } catch (std::exception &e) {
-        throw OutOfRangeException("float value must be between " + std::to_string(-FLT_MAX) + " and " + std::to_string(FLT_MAX));
-    }
-}
-
-IOperand        const * Parser::createDouble(std::string const & value) const {
-    try {
-        double nbr = std::stod(value);
-        if (nbr < -DBL_MAX || nbr > DBL_MAX)
-            throw OutOfRangeException("");
-        return (new Operand<double>(nbr, Double));
-    } catch (std::exception &e) {
-        throw OutOfRangeException("double value must be between " + std::to_string(-DBL_MAX) + " and " + std::to_string(DBL_MAX));
-    }
 }
