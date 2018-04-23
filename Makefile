@@ -24,7 +24,7 @@ DST_PATH = $(ROOT)
 LFT_PATH =
 
 CC = g++ -g
-CFLAGS = -std=c++11 -Wall -Wextra
+CFLAGS = -std=c++11 -Wall -Wextra -Werror
 CPPFLAGS = $(addprefix -I ,$(INC_PATH))
 LDFLAGS =
 LDLIBS =
