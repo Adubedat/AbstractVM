@@ -17,16 +17,23 @@
 
 int 	main(int argc, char **argv)
 {
+	AbstractVM vm;
+
 	if (argc > 1)
 	{
 		FileInputSource source(argv[1]);
-		AbstractVM vm(source);
-		vm.execute();
+		vm = AbstractVM(source);
 	}
 	else {
 		StandardInputSource source;
-		AbstractVM vm(source);
+		vm = AbstractVM(source);
+	}
+	try {
 		vm.execute();
+	} catch (std::exception &e) {
+		vm.cleanStack();
+		std::cout << e.what() << std::endl;
+		std::exit(EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
 }

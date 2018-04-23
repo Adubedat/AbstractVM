@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "AbstractVM.hpp"
-#include "Factory.hpp"
+#include "Exceptions.hpp"
 
 AbstractVM::AbstractVM(void) {}
 
@@ -52,5 +52,6 @@ void    							AbstractVM::execute() {
 		instr.execute();
 	}
 	cleanStack();
+	throw RuntimeException("Exit instruction is missing, program did not end properly");
 }
 std::deque<IOperand const *>	AbstractVM::_stack;
