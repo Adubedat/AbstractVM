@@ -51,6 +51,7 @@ Lexer		&Lexer::operator=(Lexer const & rhs) {
 		_src = rhs._src;
 		_it = rhs._it;
 		_keywords = rhs._keywords;
+		_reserved_char = rhs._reserved_char;
 	}
 	return (*this);
 }
