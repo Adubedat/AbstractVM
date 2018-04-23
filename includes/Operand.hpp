@@ -40,7 +40,7 @@ public:
 
     Operand<T>  &operator=(Operand<T> const &rhs) {
         if (this != &rhs) {
-            _value = dynamic_cast<Operand*>(rhs)->_value;
+            _value = rhs.getValue();
             _type = rhs._type;
             _str = rhs._str;
         }
@@ -55,8 +55,32 @@ public:
         return (_type);
     }
 
+    T               getValue(void) const {
+        return (_value);
+    }
+
+    double          getOperandValue(IOperand const &rhs) const {
+        switch (rhs.getType()) {
+            case Int8:
+                return (static_cast<double>(dynamic_cast<const Operand<int8_t> *>(&rhs)->getValue()));
+                break;
+            case Int16:
+                return (static_cast<double>(dynamic_cast<const Operand<int16_t> *>(&rhs)->getValue()));
+                break;
+            case Int32:
+                return (static_cast<double>(dynamic_cast<const Operand<int32_t> *>(&rhs)->getValue()));
+                break;
+            case Float:
+                return (static_cast<double>(dynamic_cast<const Operand<float> *>(&rhs)->getValue()));
+                break;
+            case Double:
+                return (static_cast<double>(dynamic_cast<const Operand<double> *>(&rhs)->getValue()));
+                break;
+        }
+    }
+
     bool        operator==(IOperand const &rhs) const {
-        return (_value == dynamic_cast<Operand*>(rhs)->_value
+        return (static_cast<double>(_value) == getOperandValue(rhs)
             && _type == rhs.getType()
             && _str == rhs.toString());
     }
@@ -64,7 +88,7 @@ public:
     IOperand        const * operator+(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
         double lvalue = static_cast<double>(this->_value);
-        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
+        double rvalue = getOperandValue(rhs);
         double result = lvalue + rvalue;
 
         return (Factory::getInstance()->createOperand(type, std::to_string(result)));
@@ -73,7 +97,7 @@ public:
     IOperand        const * operator-(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
         double lvalue = static_cast<double>(this->_value);
-        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
+        double rvalue = getOperandValue(rhs);
         double result = lvalue - rvalue;
 
         return (Factory::getInstance()->createOperand(type, std::to_string(result)));
@@ -82,7 +106,7 @@ public:
     IOperand        const * operator*(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
         double lvalue = static_cast<double>(this->_value);
-        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
+        double rvalue = getOperandValue(rhs);
         double result = lvalue * rvalue;
 
         return (Factory::getInstance()->createOperand(type, std::to_string(result)));
@@ -91,7 +115,7 @@ public:
     IOperand        const * operator/(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
         double lvalue = static_cast<double>(this->_value);
-        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
+        double rvalue = getOperandValue(rhs);
 
         if (rvalue == 0.0)
             throw RuntimeException("Division by zero");
@@ -103,10 +127,10 @@ public:
     IOperand        const * operator%(IOperand const &rhs) const {
         eOperandType type = (this->getPrecision() > rhs.getPrecision()) ? this->getType() : rhs.getType();
         double lvalue = static_cast<double>(this->_value);
-        double rvalue = static_cast<double>(dynamic_cast<Operand*>(rhs)->_value);
+        double rvalue = getOperandValue(rhs);
 
         if (rvalue == 0.0)
-            throw RuntimeException("Division by zero");
+            throw RuntimeException("Modulo by zero");
         double result = std::fmod(lvalue, rvalue);
 
         return (Factory::getInstance()->createOperand(type, std::to_string(result)));

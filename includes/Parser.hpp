@@ -23,7 +23,13 @@ class Parser
 {
 public:
 	Parser(InputSource & src);
+	Parser(Parser const &src);
 	virtual ~Parser();
+
+	Parser	&operator=(Parser const &rhs);
+
+	static const std::map<Token::Type, eOperandType>		makeOperandTokens();
+	static const std::map<Token::Type, Instruction::Type>	makeInstructionTokens();
 
 	std::vector<Instruction>	getInstructionList(void);
 
@@ -34,13 +40,11 @@ private:
 	void 		tokensToInstruction(std::vector<Token> const & tokens);
 	void 		checkOperand(Instruction::Type instruction, std::vector<Token>::const_iterator it);
 
-	const std::map<Token::Type, eOperandType>		makeOperandTokens() const;
-	const std::map<Token::Type, Instruction::Type>	makeInstructionTokens() const;
+	static const std::map<Token::Type, Instruction::Type>	_instructionTokens;
+	static const std::map<Token::Type, eOperandType>		_operandTokens;
 
-	const std::map<Token::Type, Instruction::Type>	_instructionTokens;
-	const std::map<Token::Type, eOperandType>		_operandTokens;
-	std::vector<Instruction>						_instructionList;
-	InputSource*									_src;
+	std::vector<Instruction>	_instructionList;
+	InputSource*				_src;
 };
 
 #endif

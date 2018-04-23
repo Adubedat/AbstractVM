@@ -22,9 +22,14 @@ class AbstractVM
 public:
 
 	AbstractVM(void);
+	AbstractVM(AbstractVM const &src);
 	AbstractVM(InputSource & src);
 
+	AbstractVM	&operator=(AbstractVM const &rhs);
+	
 	static std::deque<IOperand const *>		&getStack();
+	static void    cleanStack();
+	void    execute();
 
 	virtual ~AbstractVM ();
 

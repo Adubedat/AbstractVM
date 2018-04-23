@@ -70,6 +70,7 @@ void        Instruction::execute( void ) const {
         (this->*p)();
     } catch (RuntimeException &e) {
         std::cout << e.what() << std::endl;
+        AbstractVM::cleanStack();
         std::exit(EXIT_FAILURE);
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
@@ -87,6 +88,7 @@ void        Instruction::pop( void ) const {
 
     if (stack.empty())
         throw   RuntimeException("Pop on empty stack");
+    delete stack[0];
     stack.pop_front();
 }
 
@@ -114,6 +116,8 @@ void        Instruction::add( void ) const {
     if (stack.size() < 2)
         throw   RuntimeException("Add instruction with less than two operands in stack");
     newElem = *stack[0] + *stack[1];
+    delete stack[0];
+    delete stack[1];
     stack.pop_front();
     stack.pop_front();
     stack.push_front(newElem);
@@ -126,6 +130,8 @@ void        Instruction::sub( void ) const {
     if (stack.size() < 2)
         throw   RuntimeException("Sub instruction with less than two operands in stack");
     newElem = *stack[1] - *stack[0];
+    delete stack[0];
+    delete stack[1];
     stack.pop_front();
     stack.pop_front();
     stack.push_front(newElem);
@@ -138,6 +144,8 @@ void        Instruction::mul( void ) const {
     if (stack.size() < 2)
         throw   RuntimeException("Mul instruction with less than two operands in stack");
     newElem = *stack[0] * *stack[1];
+    delete stack[0];
+    delete stack[1];
     stack.pop_front();
     stack.pop_front();
     stack.push_front(newElem);
@@ -150,6 +158,8 @@ void        Instruction::div( void ) const {
     if (stack.size() < 2)
         throw   RuntimeException("Div instruction with less than two operands in stack");
     newElem = *stack[1] / *stack[0];
+    delete stack[0];
+    delete stack[1];
     stack.pop_front();
     stack.pop_front();
     stack.push_front(newElem);
@@ -162,6 +172,8 @@ void        Instruction::mod( void ) const {
     if (stack.size() < 2)
         throw   RuntimeException("Mod instruction with less than two operands in stack");
     newElem = *stack[1] % *stack[0];
+    delete stack[0];
+    delete stack[1];
     stack.pop_front();
     stack.pop_front();
     stack.push_front(newElem);
@@ -174,10 +186,11 @@ void        Instruction::print( void ) const {
         throw   RuntimeException("Print on empty stack");
     if (stack.front()->getType() != Int8)
         throw   RuntimeException("First stack element is not an Int8 for print instruction");
-    std::cout << static_cast<char>(stack.front()->_value) << std::endl;
+    std::cout << static_cast<char>(dynamic_cast<const Operand<int8_t> *>(stack.front())->getValue()) << std::endl;
 }
 
 void        Instruction::exit( void ) const {
+    AbstractVM::cleanStack();
     std::exit(EXIT_SUCCESS);
 }
 

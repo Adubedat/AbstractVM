@@ -23,8 +23,8 @@ OBJ_PATH = $(OBJ_FOLDER)
 DST_PATH = $(ROOT)
 LFT_PATH =
 
-CC = clang++ -g
-CFLAGS = -std=c++11 -Wall -Wextra -Werror
+CC = g++ -g
+CFLAGS = -std=c++11 -Wall -Wextra
 CPPFLAGS = $(addprefix -I ,$(INC_PATH))
 LDFLAGS =
 LDLIBS =

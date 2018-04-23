@@ -22,9 +22,7 @@
 
 Parser::Parser(void) {};
 
-Parser::Parser(InputSource & src) :
-    _instructionTokens(makeInstructionTokens()),
-    _operandTokens(makeOperandTokens())
+Parser::Parser(InputSource & src)
 	{
 
 	Lexer	lexer(src);
@@ -41,8 +39,19 @@ Parser::Parser(InputSource & src) :
 
 }
 
+Parser::Parser(Parser const &src) {
+    *this = src;
+}
+
 Parser::~Parser(void) {};
 
+Parser      &Parser::operator=(Parser const &rhs) {
+    if (this != &rhs) {
+        _instructionList = rhs._instructionList;
+        _src= rhs._src;
+    }
+    return (*this);
+}
 /*
 **                  Grammar checking
 */
@@ -92,7 +101,7 @@ void        Parser::checkOperand(Instruction::Type instruction, std::vector<Toke
 **					Initialisations
 */
 
-const std::map<Token::Type, eOperandType>			Parser::makeOperandTokens() const {
+const std::map<Token::Type, eOperandType>			Parser::makeOperandTokens() {
 
     std::map<Token::Type, eOperandType> map;
 
@@ -105,7 +114,7 @@ const std::map<Token::Type, eOperandType>			Parser::makeOperandTokens() const {
     return (map);
 }
 
-const std::map<Token::Type, Instruction::Type>      Parser::makeInstructionTokens() const {
+const std::map<Token::Type, Instruction::Type>      Parser::makeInstructionTokens() {
 
     std::map<Token::Type, Instruction::Type> map;
 
@@ -123,6 +132,9 @@ const std::map<Token::Type, Instruction::Type>      Parser::makeInstructionToken
 
     return (map);
 }
+
+const std::map<Token::Type, Instruction::Type>	Parser::_instructionTokens = makeInstructionTokens();
+const std::map<Token::Type, eOperandType>		Parser::_operandTokens = makeOperandTokens();
 
 /*
 **                  Getters and setters

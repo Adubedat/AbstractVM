@@ -17,17 +17,16 @@
 
 int 	main(int argc, char **argv)
 {
-	(void)argv;
 	if (argc > 1)
 	{
-		for (int i = 1; i < argc; ++i) {
-			FileInputSource source(argv[i]);
-			AbstractVM vm(source);
-		}
+		FileInputSource source(argv[1]);
+		AbstractVM vm(source);
+		vm.execute();
 	}
 	else {
 		StandardInputSource source;
 		AbstractVM vm(source);
+		vm.execute();
 	}
 	return (EXIT_SUCCESS);
 }
